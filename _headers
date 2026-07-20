@@ -1,0 +1,41 @@
+# Force UTF-8 encoding for HTML
+/*
+  Content-Type: text/html; charset=utf-8
+
+# Proper MIME types for fonts
+*.woff
+  Content-Type: application/font-woff
+*.woff2
+  Content-Type: application/font-woff2
+*.ttf
+  Content-Type: font/ttf
+*.otf
+  Content-Type: font/otf
+
+# Proper MIME types for images
+*.png
+  Content-Type: image/png
+*.jpg
+  Content-Type: image/jpeg
+*.jpeg
+  Content-Type: image/jpeg
+*.gif
+  Content-Type: image/gif
+*.svg
+  Content-Type: image/svg+xml
+
+# JSON and manifest
+*.json
+  Content-Type: application/json
+*.webmanifest
+  Content-Type: application/manifest+json
+
+# CORS for fonts
+*.woff
+  Access-Control-Allow-Origin: *
+*.woff2
+  Access-Control-Allow-Origin: *
+*.ttf
+  Access-Control-Allow-Origin: *
+*.otf
+  Access-Control-Allow-Origin: *
