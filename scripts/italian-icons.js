@@ -45,6 +45,11 @@
     Object.defineProperty(Image.prototype, 'src', {
         set: function(value) {
             if (typeof value === 'string' && value.includes('.gif')) {
+                // Fix moon icon paths - add weatherstarita to path if missing
+                if (value.includes('pekkie9991.github.io/images/2/') && !value.includes('weatherstarita')) {
+                    value = value.replace('pekkie9991.github.io/images/', 'pekkie9991.github.io/weatherstarita/images/');
+                }
+                
                 for (const [italian, english] of Object.entries(italianToEnglish)) {
                     if (value.includes(italian + '.gif')) {
                         // Replace Italian condition with English icon name
