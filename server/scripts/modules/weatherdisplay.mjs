@@ -450,6 +450,23 @@ class WeatherDisplay {
 		// clone it
 		const template = templateNode.cloneNode(true);
 
+		const sanitizeItalianAccents = (str) => {
+			if (typeof str !== 'string') return str;
+			return str
+				.replace(/à/g, "a'")
+				.replace(/è/g, "e'")
+				.replace(/é/g, "e'")
+				.replace(/ì/g, "i'")
+				.replace(/ò/g, "o'")
+				.replace(/ù/g, "u'")
+				.replace(/À/g, "A'")
+				.replace(/È/g, "E'")
+				.replace(/É/g, "E'")
+				.replace(/Ì/g, "I'")
+				.replace(/Ò/g, "O'")
+				.replace(/Ù/g, "U'");
+		};
+
 		Object.entries(fillValues).forEach(([key, value]) => {
 			// get the specified element
 			const elem = template.querySelector(`.${key}`);
@@ -458,7 +475,7 @@ class WeatherDisplay {
 			// fill based on type provided
 			if (typeof value === 'string' || typeof value === 'number') {
 				// string and number fill the first found selector
-				elem.innerHTML = value;
+				elem.innerHTML = sanitizeItalianAccents(value.toString());
 			} else if (value?.type === 'img') {
 				// fill the image source
 				elem.querySelector('img').src = value.src;

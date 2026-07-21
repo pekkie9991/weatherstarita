@@ -52,7 +52,7 @@ class CustomWeatherStation extends WeatherDisplay {
 			icon: { type: 'img', src: iconImage },
 		};
 
-		if (customWeatherParameters.windGust) fill['wind-gusts'] = `Gusts to ${customWeatherParameters.windGust}`;
+		if (customWeatherParameters.windGust) fill['wind-gusts'] = `Raffica a ${customWeatherParameters.windGust}`;
 
 		const area = this.elem.querySelector('.main');
 

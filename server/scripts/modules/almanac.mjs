@@ -117,12 +117,29 @@ class Almanac extends WeatherDisplay {
 	async drawCanvas() {
 		super.drawCanvas();
 		const info = this.data;
-		const Today = DateTime.local();
-		const Tomorrow = Today.plus({ days: 1 });
+		const Today = DateTime.local().setLocale('it');
+		const Tomorrow = Today.plus({ days: 1 }).setLocale('it');
+
+		const sanitizeItalianAccents = (str) => {
+			if (typeof str !== 'string') return str;
+			return str
+				.replace(/à/g, "a'")
+				.replace(/è/g, "e'")
+				.replace(/é/g, "e'")
+				.replace(/ì/g, "i'")
+				.replace(/ò/g, "o'")
+				.replace(/ù/g, "u'")
+				.replace(/À/g, "A'")
+				.replace(/È/g, "E'")
+				.replace(/É/g, "E'")
+				.replace(/Ì/g, "I'")
+				.replace(/Ò/g, "O'")
+				.replace(/Ù/g, "U'");
+		};
 
 		// sun and moon data
-		this.elem.querySelector('.day-1').innerHTML = Today.toLocaleString({ weekday: 'long' });
-		this.elem.querySelector('.day-2').innerHTML = Tomorrow.toLocaleString({ weekday: 'long' });
+		this.elem.querySelector('.day-1').innerHTML = sanitizeItalianAccents(Today.toLocaleString({ weekday: 'long' }));
+		this.elem.querySelector('.day-2').innerHTML = sanitizeItalianAccents(Tomorrow.toLocaleString({ weekday: 'long' }));
 		this.elem.querySelector('.rise-1').innerHTML = DateTime.fromJSDate(info.sun[0].sunrise).toLocaleString(DateTime.TIME_SIMPLE).toLowerCase();
 		this.elem.querySelector('.rise-2').innerHTML = DateTime.fromJSDate(info.sun[1].sunrise).toLocaleString(DateTime.TIME_SIMPLE).toLowerCase();
 		this.elem.querySelector('.set-1').innerHTML = DateTime.fromJSDate(info.sun[0].sunset).toLocaleString(DateTime.TIME_SIMPLE).toLowerCase();
