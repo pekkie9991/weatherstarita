@@ -97,24 +97,39 @@
         }
     });
     
-    // Use MutationObserver to fix images already in DOM
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.nodeName === 'IMG') {
-                    fixImageSrc(node);
-                } else if (node.querySelectorAll) {
-                    node.querySelectorAll('img').forEach(fixImageSrc);
-                }
+    // Initialize when DOM is ready
+    function initObserver() {
+        if (!document.body) {
+            setTimeout(initObserver, 100);
+            return;
+        }
+        
+        // Use MutationObserver to fix images already in DOM
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeName === 'IMG') {
+                        fixImageSrc(node);
+                    } else if (node.querySelectorAll) {
+                        node.querySelectorAll('img').forEach(fixImageSrc);
+                    }
+                });
             });
         });
-    });
+        
+        // Start observing
+        observer.observe(document.body, { childList: true, subtree: true });
+        
+        // Fix existing images on page load
+        document.querySelectorAll('img').forEach(fixImageSrc);
+        
+        console.log('Italian weather icon mapping loaded');
+    }
     
-    // Start observing
-    observer.observe(document.body, { childList: true, subtree: true });
-    
-    // Fix existing images on page load
-    document.querySelectorAll('img').forEach(fixImageSrc);
-    
-    console.log('Italian weather icon mapping loaded');
+    // Start initialization
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initObserver);
+    } else {
+        initObserver();
+    }
 })();
