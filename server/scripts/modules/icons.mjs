@@ -14,28 +14,51 @@ const italianToEnglish = {
 	'coperto': 'overcast',
 	'cielo coperto': 'overcast',
 	
+	// Fog
+	'nebbia': 'fog',
+	'nebbia con brina': 'depositing-rime-fog',
+	
+	// Drizzle
+	'pioviggine leggera': 'light-drizzle',
+	'pioviggine moderata': 'moderate-drizzle',
+	'pioviggine fitta': 'dense-drizzle',
+	'pioviggine gelata leggera': 'light-freezing-drizzle',
+	'pioviggine gelata intensa': 'dense-freezing-drizzle',
+	
 	// Rain
 	'pioggia': 'moderate-rain',
-	'rovesci di pioggia deboli': 'slight-rain-showers',
+	'pioggia debole': 'slight-rain',
+	'pioggia moderata': 'moderate-rain',
+	'pioggia forte': 'heavy-rain',
+	'pioggia gelata leggera': 'light-freezing-rain',
+	'pioggia gelata forte': 'heavy-freezing-rain',
 	'rovesci': 'slight-rain-showers',
 	'rovesci di pioggia': 'slight-rain-showers',
+	'rovesci di pioggia deboli': 'slight-rain-showers',
+	'rovesci di pioggia moderati': 'moderate-rain-showers',
+	'rovesci di pioggia violenti': 'voilent-rain-showers',
 	'acquazzoni': 'moderate-rain-showers',
 	
 	// Snow
 	'neve': 'moderate-snow-fall',
+	'nevicata debole': 'slight-snow-fall',
+	'nevicata moderata': 'moderate-snow-fall',
+	'nevicata abbondante': 'heavy-snow-fall',
 	'rovesci di neve': 'slight-snow-showers',
+	'rovesci di neve deboli': 'slight-snow-showers',
+	'rovesci di neve forti': 'heavy-snow-showers',
 	'nevicata': 'heavy-snow-fall',
+	'granelli di neve': 'snow-grains',
+	
+	// Mixed
+	'misto': 'rain-snow',
+	'pioggia e neve': 'rain-snow',
 	
 	// Thunderstorm
 	'temporale': 'thunderstorm',
 	'temporali': 'thunderstorm',
-	
-	// Fog
-	'nebbia': 'fog',
-	
-	// Mixed
-	'misto': 'rain-snow',
-	'pioggia e neve': 'rain-snow'
+	'temporale con grandine debole': 'thunderstorm-with-slight-hail',
+	'temporale con grandine forte': 'thunderstorm-with-heavy-hail'
 };
 
 function translateItalianToEnglish(text) {

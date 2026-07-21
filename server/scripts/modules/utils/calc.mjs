@@ -1,7 +1,7 @@
 // wind direction
 const directionToNSEW = (Direction) => {
 	const val = Math.floor((Direction / 22.5) + 0.5);
-	const arr = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+	const arr = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSO', 'SO', 'OSO', 'O', 'ONO', 'NO', 'NNO'];
 	return arr[(val % 16)];
 };
 
@@ -35,45 +35,39 @@ function getMarineAdvisory(periodMarineData, dailyWindMinMaxInKnots) {
 
 	let advisory = '';
 
-	// Test data for advisory
-	// periodMarineData.waveHeight = 1.4; // triggers "Small Craft Advisory"
-	// periodMarineData.waveHeight = 3.0;   // triggers "Rough Seas Advisory"
-	// periodMarineData.waveHeight = 5;   // triggers "Hazardous Seas Advisory"
-
 	// Advisory based on wave height alone
 	if (periodMarineData.waveHeight >= 1.2 && periodMarineData.waveHeight < 2.1) {
-		advisory = 'Small Craft Advisory';
+		advisory = 'Avviso Piccole Imbarcazioni';
 	}
 
 	if (periodMarineData.waveHeight >= 2.1 && periodMarineData.waveHeight < 4) {
-		advisory = 'Rough Seas Advisory';
+		advisory = 'Avviso Mare Mosso';
 	}
 
 	if (periodMarineData.waveHeight >= 4) {
-		advisory = 'Hazardous Seas Warning';
+		advisory = 'Allerta Mare Pericoloso';
 	}
 
 	const maxWind = dailyWindMinMaxInKnots[periodMarineData.text.toLowerCase()].max;
 
 	// Wind Modifiers
 	if (maxWind >= 20 && maxWind < 34) {
-		advisory += ' (Wind)';
+		advisory += ' (Vento)';
 	} else if (maxWind >= 34 && maxWind < 48) {
-		advisory += ' (Gale)';
+		advisory += ' (Burrasca)';
 	} else if (maxWind >= 48) {
-		advisory += ' (Storm)';
+		advisory += ' (Tempesta)';
 	}
 
 	// Additional rough surf warning for short-period steep waves
 	if (periodMarineData.waveHeight >= 1.5 && periodMarineData.swellPeriod < 5) {
 		// overwrite advisory if it exists
-		advisory = '';
-		advisory = 'Rough Surf Advisory';
+		advisory = 'Avviso Mareggiate';
 	}
 
 	// if advisory is too short, it's likely a wind modifier
 	// without a wave height advisory, so we must clean it up
-	if (advisory.length <= 8) {
+	if (advisory.length <= 11) { // Adjusted length check since "(Tempesta)" is 10 chars
 		const bracketRegex = /\(([^)]*)\)/g;
 		const sanitizedAdvisory = advisory.trim().replace(bracketRegex, '$1');
 		advisory = sanitizedAdvisory;

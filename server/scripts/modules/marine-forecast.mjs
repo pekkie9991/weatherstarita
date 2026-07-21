@@ -163,11 +163,15 @@ const translateSeasCondition = (condition) => {
 	const map = {
 		CALM: 'CALMO',
 		SMOOTH: 'QUASI CALMO',
-		SLIGHT: 'POGO MOSSO',
+		SLIGHT: 'POCO MOSSO',
+		CHOPPY: 'MOSSO',
+		'MDT CHOP': 'MOSSO',
 		MODERATE: 'MOSSO',
 		ROUGH: 'MOLTO MOSSO',
-		'VERY ROUGH': 'AGGITATO',
+		'V ROUGH': 'AGITATO',
+		'VERY ROUGH': 'AGITATO',
 		HIGH: 'MOLTO AGITATO',
+		'V HIGH': 'GROSSO',
 		VERY_HIGH: 'GROSSO',
 		PHENOMENAL: 'MOLTO GROSSO',
 	};
