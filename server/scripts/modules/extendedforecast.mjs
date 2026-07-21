@@ -41,10 +41,10 @@ class ExtendedForecast extends WeatherDisplay {
 		sanitizedText = sanitizedText.replace(/forte/gi, 'for.');
 
 		if (sanitizedText.toLowerCase() === 'temporale') {
-			return 'Temp.';
+			return 'TEMP.';
 		}
 
-		return sanitizedText;
+		return sanitizedText.toUpperCase();
 	}
 
 	async getData(_weatherParameters) {
