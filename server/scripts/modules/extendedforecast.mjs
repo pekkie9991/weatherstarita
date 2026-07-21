@@ -18,26 +18,33 @@ class ExtendedForecast extends WeatherDisplay {
 	}
 
 	static dayConditionTextSanitizer(text) {
-		let sanitizedText;
-		const spaces = text.split(' ');
+		if (!text) return '';
+		let sanitizedText = text;
+		sanitizedText = sanitizedText.replace(/Prevalentemente/gi, 'Prev.');
+		sanitizedText = sanitizedText.replace(/Parzialmente/gi, 'Parz.');
+		sanitizedText = sanitizedText.replace(/Pioviggine/gi, 'Piovigg.');
+		sanitizedText = sanitizedText.replace(/Pioggia/gi, 'Piog.');
+		sanitizedText = sanitizedText.replace(/Nevicata/gi, 'Nev.');
+		sanitizedText = sanitizedText.replace(/Rovesci di/gi, 'Rov.');
+		sanitizedText = sanitizedText.replace(/Temporale/gi, 'Temp.');
+		sanitizedText = sanitizedText.replace(/grandine/gi, 'grand.');
+		sanitizedText = sanitizedText.replace(/leggera/gi, 'leg.');
+		sanitizedText = sanitizedText.replace(/debole/gi, 'deb.');
+		sanitizedText = sanitizedText.replace(/moderata/gi, 'mod.');
+		sanitizedText = sanitizedText.replace(/moderati/gi, 'mod.');
+		sanitizedText = sanitizedText.replace(/abbondante/gi, 'abb.');
+		sanitizedText = sanitizedText.replace(/violenti/gi, 'viol.');
+		sanitizedText = sanitizedText.replace(/gelata/gi, 'gel.');
+		sanitizedText = sanitizedText.replace(/intensa/gi, 'int.');
+		sanitizedText = sanitizedText.replace(/deboli/gi, 'deb.');
+		sanitizedText = sanitizedText.replace(/forti/gi, 'for.');
+		sanitizedText = sanitizedText.replace(/forte/gi, 'for.');
 
-		if (spaces.length > 2) {
-			// text is too long, first word is
-			// likely "Slight" so we'll cut it.
-			sanitizedText = spaces.slice(0, 2).join(' ');
-
-			return sanitizedText;
+		if (sanitizedText.toLowerCase() === 'temporale') {
+			return 'Temp.';
 		}
 
-		// Special case for thunderstorm(s), as
-		// it clips into the other day panels
-		if (text.toLowerCase() === 'temporale') {
-			// special case for thunderstorms
-			sanitizedText = 'Temp.';
-			return sanitizedText;
-		}
-
-		return text;
+		return sanitizedText;
 	}
 
 	async getData(_weatherParameters) {
