@@ -40,21 +40,47 @@
         "Pioggia e neve": "Rain-Snow"
     };
     
-    // Also patch Image.src to catch dynamic loading
+    // Function to fix image paths
+    function fixImageSrc(img) {
+        if (!img.src || typeof img.src !== 'string') return;
+        
+        let src = img.src;
+        
+        // Fix moon icon paths - add weatherstarita if missing
+        if (src.includes('pekkie9991.github.io/images/2/') && !src.includes('weatherstarita')) {
+            src = src.replace('pekkie9991.github.io/images/', 'pekkie9991.github.io/weatherstarita/images/');
+            img.src = src;
+            console.log(`[Italian Icons] Fixed moon icon path to: ${src}`);
+        }
+        
+        // Map Italian conditions to English icons
+        for (const [italian, english] of Object.entries(italianToEnglish)) {
+            if (src.includes(italian + '.gif')) {
+                let newSrc = src.replace(italian + '.gif', english + '.gif');
+                // Fix path if looking in images/2/ but icon is in images/
+                if (newSrc.includes('images/2/') && !newSrc.includes('images/2/r/')) {
+                    newSrc = newSrc.replace('images/2/', 'images/');
+                }
+                img.src = newSrc;
+                console.log(`[Italian Icons] Mapped "${italian}.gif" to "${english}.gif"`);
+                return;
+            }
+        }
+    }
+    
+    // Patch Image.src to catch dynamic loading
     const originalImageSrc = Object.getOwnPropertyDescriptor(Image.prototype, 'src');
     Object.defineProperty(Image.prototype, 'src', {
         set: function(value) {
             if (typeof value === 'string' && value.includes('.gif')) {
-                // Fix moon icon paths - add weatherstarita to path if missing
+                // Fix moon icon paths
                 if (value.includes('pekkie9991.github.io/images/2/') && !value.includes('weatherstarita')) {
                     value = value.replace('pekkie9991.github.io/images/', 'pekkie9991.github.io/weatherstarita/images/');
                 }
                 
                 for (const [italian, english] of Object.entries(italianToEnglish)) {
                     if (value.includes(italian + '.gif')) {
-                        // Replace Italian condition with English icon name
                         let newValue = value.replace(italian + '.gif', english + '.gif');
-                        // Also fix path if it's looking in images/2/ but icon is in images/
                         if (newValue.includes('images/2/') && !newValue.includes('images/2/r/')) {
                             newValue = newValue.replace('images/2/', 'images/');
                         }
@@ -71,26 +97,24 @@
         }
     });
     
-    // Fix moon icon paths - they should be in images/2/ not images/
-    const originalLog = console.log;
-    console.log = function(...args) {
-        if (args[0] && typeof args[0] === 'string' && args[0].includes('Unable to locate icon for:')) {
-            const italianCondition = args[0].replace('Unable to locate icon for: ', '');
-            if (italianToEnglish[italianCondition]) {
-                const englishIcon = italianToEnglish[italianCondition];
-                originalLog.call(console, `[Italian Icons] Redirecting "${italianCondition}" to "${englishIcon}"`);
-                
-                // Find and replace all img elements with this Italian condition
-                document.querySelectorAll('img[src*="' + italianCondition + '.gif"]').forEach(img => {
-                    img.src = img.src.replace(italianCondition + '.gif', englishIcon + '.gif');
-                });
-                
-                // Also replace in any img elements that might be created dynamically
-                return;
-            }
-        }
-        originalLog.apply(console, args);
-    };
+    // Use MutationObserver to fix images already in DOM
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeName === 'IMG') {
+                    fixImageSrc(node);
+                } else if (node.querySelectorAll) {
+                    node.querySelectorAll('img').forEach(fixImageSrc);
+                }
+            });
+        });
+    });
+    
+    // Start observing
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    // Fix existing images on page load
+    document.querySelectorAll('img').forEach(fixImageSrc);
     
     console.log('Italian weather icon mapping loaded');
 })();
