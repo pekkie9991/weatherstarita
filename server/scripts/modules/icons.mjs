@@ -144,9 +144,9 @@ const getWeatherRegionalIconFromIconLink = (text, isDay) => {
 
 		case 3:
 		case 'overcast':
-			return addPath('Partly-Cloudy.gif');
+			return addPath('Cloudy.gif');
 		case 'overcast-night':
-			return addPath('Mostly-Clear.gif');
+			return addPath('Mostly-Cloudy.gif');
 
 		case 45:
 		case 48:
@@ -230,7 +230,7 @@ const getWeatherRegionalIconFromIconLink = (text, isDay) => {
 		case 'voilent-rain-showers':
 		case 'moderate-rain-showers-night':
 		case 'voilent-rain-showers-night':
-			return addPath('Rain-1992.gif');
+			return addPath('Rain-1992.gif'); // Rain.gif does not exist in /r
 
 		case 85:
 		case 86:
@@ -376,7 +376,7 @@ const getWeatherIconFromIconLink = (text, timeZone, extendedForecast) => {
 		case 82:
 		case 'moderate-rain-showers':
 		case 'voilent-rain-showers':
-			return addPath('Rain.gif');
+			return addPath('Rain.gif'); // exists in images/ root
 
 		case 85:
 		case 86:
