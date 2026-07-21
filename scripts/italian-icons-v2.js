@@ -97,6 +97,37 @@
         }
     });
     
+    // Patch fetch to intercept icon loading
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+        if (typeof url === 'string' && url.includes('.gif')) {
+            let newUrl = url;
+            
+            // Fix moon icon paths
+            if (newUrl.includes('pekkie9991.github.io/images/2/') && !newUrl.includes('weatherstarita')) {
+                newUrl = newUrl.replace('pekkie9991.github.io/images/', 'pekkie9991.github.io/weatherstarita/images/');
+                console.log(`[Italian Icons] Fixed fetch URL for moon icon: ${newUrl}`);
+            }
+            
+            // Map Italian conditions to English icons
+            for (const [italian, english] of Object.entries(italianToEnglish)) {
+                if (newUrl.includes(italian + '.gif')) {
+                    newUrl = newUrl.replace(italian + '.gif', english + '.gif');
+                    if (newUrl.includes('images/2/') && !newUrl.includes('images/2/r/')) {
+                        newUrl = newUrl.replace('images/2/', 'images/');
+                    }
+                    console.log(`[Italian Icons] Redirecting fetch from "${italian}.gif" to "${english}.gif"`);
+                    return originalFetch.call(this, newUrl, options);
+                }
+            }
+            
+            if (newUrl !== url) {
+                return originalFetch.call(this, newUrl, options);
+            }
+        }
+        return originalFetch.call(this, url, options);
+    };
+    
     // Initialize when DOM is ready
     function initObserver() {
         if (!document.body) {
