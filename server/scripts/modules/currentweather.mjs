@@ -40,7 +40,7 @@ class CurrentWeather extends WeatherDisplay {
 			condition = shortConditions(condition);
 		}
 
-		const iconImage = getWeatherIconFromIconLink(fullCondition, this.data.timeZone);
+const iconImage = getWeatherIconFromIconLink(fullCondition, this.data.timeZone, false, this.data.isDay);
 		const pressureArrow = getPressureArrow(this.data);
 
 		const fill = {
@@ -167,6 +167,7 @@ const parseData = (data) => {
 	data.PressureUnit = ConversionHelpers.getPressureUnitText();
 	data.PressureDirection = currentForecast.pressureTrend;
 	data.TextConditions = currentForecast.weather_code;
+	data.isDay = currentForecast.is_day;
 
 	return data;
 };

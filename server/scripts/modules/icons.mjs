@@ -120,11 +120,23 @@ const getWeatherRegionalIconFromIconLink = (text, isDay) => {
 	// Translate Italian to English first
 	text = translateItalianToEnglish(text);
 
-	// const nightTime = isNightTime(timeZone);
+	let isDayValue;
+	if (typeof isDay === 'boolean') {
+		isDayValue = isDay;
+	} else if (typeof isDay === 'number') {
+		isDayValue = isDay === 1;
+	} else if (typeof isDay === 'string') {
+		if (isDay === '0' || isDay.toLowerCase() === 'false') {
+			isDayValue = false;
+		} else if (isDay === '1' || isDay.toLowerCase() === 'true') {
+			isDayValue = true;
+		}
+	}
+
 	let tidyText = text.toLowerCase();
 	if (tidyText.includes(' ')) tidyText = tidyText.replaceAll(' ', '-');
 
-	if (isDay === 0) tidyText += '-night';
+	if (isDayValue === false) tidyText += '-night';
 
 	// find the icon
 	switch (tidyText) {
@@ -272,7 +284,7 @@ const getWeatherRegionalIconFromIconLink = (text, isDay) => {
  * @param {*} extendedForecast boolean value to determine if the icon should be daytime only - this is required for the extended forecast view
  * @returns string - the path to the icon
  */
-const getWeatherIconFromIconLink = (text, timeZone, extendedForecast) => {
+const getWeatherIconFromIconLink = (text, timeZone, extendedForecast = false, isDay = undefined) => {
 	if (!text) return 'images/Logo3.gif';
 
 	// Translate Italian to English first
@@ -280,16 +292,30 @@ const getWeatherIconFromIconLink = (text, timeZone, extendedForecast) => {
 
 	const addPath = (icon) => `images/${icon}`;
 
-	const nightTime = isNightTime(timeZone);
+	let isDayValue;
+	if (typeof isDay === 'boolean') {
+		isDayValue = isDay;
+	} else if (typeof isDay === 'number') {
+		isDayValue = isDay === 1;
+	} else if (typeof isDay === 'string') {
+		if (isDay === '0' || isDay.toLowerCase() === 'false') {
+			isDayValue = false;
+		} else if (isDay === '1' || isDay.toLowerCase() === 'true') {
+			isDayValue = true;
+		}
+	}
+	const nightTime = typeof isDayValue === 'undefined' ? isNightTime(timeZone) : !isDayValue;
 	let tidyText;
-	if (text.length > 3) {
+	if (typeof text === 'string' && text.length > 3) {
 		tidyText = text.toLowerCase().replaceAll(' ', '-');
 	} else {
 		tidyText = text;
 	}
 
-	if (!extendedForecast && tidyText.length > 3) {
-		if (nightTime && tidyText.includes('clear')) tidyText += '-night';
+	if (!extendedForecast && typeof tidyText === 'string' && tidyText.length > 3) {
+		if (nightTime && (tidyText.includes('clear') || tidyText === 'partly-cloudy')) {
+			tidyText += '-night';
+		}
 	}
 
 	// find the icon
