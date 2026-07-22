@@ -203,7 +203,7 @@ const getMarineForecast = async (latLon, haveDataCallback) => {
 	if (typeof haveDataCallback === 'function') haveDataCallback(marinePoint);
 
 	displays.forEach((display) => {
-		if (display.name === 'Marine Forecast') {
+		if (display.elemId === 'marine-forecast') {
 			display.getMarineData(point, marinePoint);
 		}
 	});
@@ -216,7 +216,7 @@ const getAirQualityForecast = async (latLon, haveDataCallback) => {
 	if (typeof haveDataCallback === 'function') haveDataCallback(airQualityPoint);
 
 	displays.forEach((display) => {
-		if (display.name === 'Air Quality') {
+		if (display.elemId === 'aqi-forecast') {
 			display.getAirQualityData(point, airQualityPoint);
 		}
 	});
