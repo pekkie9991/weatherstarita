@@ -100,27 +100,46 @@ const shortConditions = (_condition) => {
 	return condition;
 };
 
-const getCurrentWeatherByHourFromTime = (data) => {
-	const currentTime = new Date();
-	const onlyDate = currentTime.toLocaleDateString('en-CA', { timeZone: data.timeZone }).split('T')[0]; // Extracts "YYYY-MM-DD"
-
-	const availableTimes = data.forecast[onlyDate].hours;
-
-	const closestTime = availableTimes.reduce((prev, curr) => {
-		const prevDiff = Math.abs(new Date(prev.time) - currentTime);
-		const currDiff = Math.abs(new Date(curr.time) - currentTime);
-		return currDiff < prevDiff ? curr : prev;
+const getForecastTimeZoneNow = (timeZone) => {
+	const formatter = new Intl.DateTimeFormat('en-CA', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		hour12: false,
+		timeZone,
 	});
 
-	// Find forecast from 3 hours ago
-	const threeHoursAgo = new Date(currentTime.getTime() - 3 * 60 * 60 * 1000);
-	const previousHour = availableTimes
-		.filter((entry) => new Date(entry.time) <= currentTime && new Date(entry.time) >= threeHoursAgo)
-		.reduce((prev, curr) => {
-			const prevDiff = Math.abs(new Date(prev.time) - threeHoursAgo);
-			const currDiff = Math.abs(new Date(curr.time) - threeHoursAgo);
-			return currDiff < prevDiff ? curr : prev;
-		}, availableTimes[0]);
+	const parts = formatter.formatToParts(new Date());
+	const normalized = parts.reduce((acc, part) => {
+		if (part.type !== 'literal') acc[part.type] = part.value;
+		return acc;
+	}, {});
+
+	return `${normalized.year}-${normalized.month}-${normalized.day}T${normalized.hour}:${normalized.minute}`;
+};
+
+const getCurrentWeatherByHourFromTime = (data) => {
+	const currentTime = getForecastTimeZoneNow(data.timeZone);
+	const onlyDate = currentTime.split('T')[0]; // Extracts "YYYY-MM-DD"
+
+	const allHours = Object.values(data.forecast).flatMap((date) => date.hours);
+	const sortedHours = allHours.sort((a, b) => a.time.localeCompare(b.time));
+
+	let closestTime = sortedHours[0];
+	let closestIndex = 0;
+	for (let i = 0; i < sortedHours.length; i += 1) {
+		if (sortedHours[i].time <= currentTime) {
+			closestTime = sortedHours[i];
+			closestIndex = i;
+		} else {
+			break;
+		}
+	}
+
+	const previousIndex = Math.max(0, closestIndex - 3);
+	const previousHour = sortedHours[previousIndex];
 
 	const diff = closestTime.pressure_msl - previousHour.pressure_msl;
 
@@ -167,7 +186,7 @@ const parseData = (data) => {
 	data.PressureUnit = ConversionHelpers.getPressureUnitText();
 	data.PressureDirection = currentForecast.pressureTrend;
 	data.TextConditions = currentForecast.weather_code;
-	data.isDay = currentForecast.is_day;
+	data.isDay = currentForecast.is_day === 1 || currentForecast.is_day === '1' || currentForecast.is_day === true;
 
 	return data;
 };
