@@ -72,17 +72,22 @@ function translateItalianToEnglish(text) {
 
 function isNightTime(timeZone) {
 	const now = new Date();
-	const hour = new Intl.DateTimeFormat('en-US', {
-		hour: 'numeric',
-		hour12: false,
-		timeZone,
-	}).format(now);
+	try {
+		const hour = new Intl.DateTimeFormat('en-US', {
+			hour: 'numeric',
+			hour12: false,
+			timeZone,
+		}).format(now);
 
-	return hour >= 18 || hour < 6;
+		return hour >= 18 || hour < 6;
+	} catch (error) {
+		console.warn(`Unable to determine night time for timezone "${timeZone}":`, error);
+		return false;
+	}
 }
 
 const getWaveIconFromCondition = (condition) => {
-	const addPath = (icon) => `images/r/${icon}`;
+	const addPath = (icon) => `/images/r/${icon}`;
 
 	let tidyText = condition.toLowerCase();
 	if (tidyText.includes(' ')) tidyText = tidyText.replaceAll(' ', '-');
@@ -110,7 +115,7 @@ const getWaveIconFromCondition = (condition) => {
 
 const getWeatherRegionalIconFromIconLink = (text, isDay) => {
 	// internal function to add path to returned icon
-	const addPath = (icon) => `images/r/${icon}`;
+	const addPath = (icon) => `/images/r/${icon}`;
 
 	// Translate Italian to English first
 	text = translateItalianToEnglish(text);
@@ -268,12 +273,12 @@ const getWeatherRegionalIconFromIconLink = (text, isDay) => {
  * @returns string - the path to the icon
  */
 const getWeatherIconFromIconLink = (text, timeZone, extendedForecast) => {
-	if (!text) return false;
+	if (!text) return '/images/Logo3.gif';
 
 	// Translate Italian to English first
 	text = translateItalianToEnglish(text);
 
-	const addPath = (icon) => `images/${icon}`;
+	const addPath = (icon) => `/images/${icon}`;
 
 	const nightTime = isNightTime(timeZone);
 	let tidyText;
