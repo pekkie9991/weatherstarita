@@ -87,7 +87,7 @@ function isNightTime(timeZone) {
 }
 
 const getWaveIconFromCondition = (condition) => {
-	const addPath = (icon) => `/images/r/${icon}`;
+	const addPath = (icon) => `images/r/${icon}`;
 
 	let tidyText = condition.toLowerCase();
 	if (tidyText.includes(' ')) tidyText = tidyText.replaceAll(' ', '-');
@@ -115,7 +115,7 @@ const getWaveIconFromCondition = (condition) => {
 
 const getWeatherRegionalIconFromIconLink = (text, isDay) => {
 	// internal function to add path to returned icon
-	const addPath = (icon) => `/images/r/${icon}`;
+	const addPath = (icon) => `images/r/${icon}`;
 
 	// Translate Italian to English first
 	text = translateItalianToEnglish(text);
@@ -273,12 +273,12 @@ const getWeatherRegionalIconFromIconLink = (text, isDay) => {
  * @returns string - the path to the icon
  */
 const getWeatherIconFromIconLink = (text, timeZone, extendedForecast) => {
-	if (!text) return '/images/Logo3.gif';
+	if (!text) return 'images/Logo3.gif';
 
 	// Translate Italian to English first
 	text = translateItalianToEnglish(text);
 
-	const addPath = (icon) => `/images/${icon}`;
+	const addPath = (icon) => `images/${icon}`;
 
 	const nightTime = isNightTime(timeZone);
 	let tidyText;
